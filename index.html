@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Love for Manh</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body {
+        width:100%; height:100%; overflow:hidden;
+        font-family:'Poppins', sans-serif;
+        background: radial-gradient(circle at top, #1a1a3c 0%, #0b0b1a 45%, #050505 100%);
+    }
+
+    /* BACKGROUND ELEMENTS */
+    .bg-glow {
+        position:fixed; width:700px; height:700px; border-radius:50%;
+        filter:blur(130px); pointer-events:none;
+        animation: glowMove 12s ease-in-out infinite alternate;
+    }
+    .bg-glow.one { top:-250px; left:-150px; background:rgba(255,105,180,0.12); }
+    .bg-glow.two { bottom:-250px; right:-150px; background:rgba(255,0,128,0.1); animation-delay:3s; }
+    @keyframes glowMove { from { transform:translateY(0) scale(1); } to { transform:translateY(50px) scale(1.1); } }
+
+    .star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; animation: twinkle 3s infinite alternate; }
+    @keyframes twinkle { from { opacity:0.2; transform:scale(1); } to { opacity:1; transform:scale(1.8); } }
+
+    /* OVERLAY - FIX MÀU NỀN CHUẨN XANH TÍM THAN */
+    #overlay {
+        position:fixed; inset:0; z-index:9999;
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        background: #0f1123; /* Màu xanh đen sâu đúng ý bạn */
+        transition: opacity 1s;
+    }
+    .demo-text {
+        color: rgba(255,255,255,0.4); font-size: 3rem; font-weight: 300; margin-bottom: 50px;
+    }
+
+    /* HEART BUTTON SVG NGHỆ THUẬT */
+    .heart-btn {
+    width: 130px;
+    height: 130px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+}
+
+.heart-btn svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.heart-path {
+    fill: none;
+    stroke-width: 0.7; /* Viền mảnh nhìn sẽ sang hơn */
+    stroke-linecap: round;
+}
+
+/* Lớp viền chính phát sáng */
+.heart-path.main {
+    stroke: #ff2d55;
+    stroke-dasharray: 100;
+    filter: drop-shadow(0 0 2px #ff2d55) 
+            drop-shadow(0 0 10px #ff2d55) 
+            drop-shadow(0 0 20px #ff2d55);
+    animation: pulseStroke 2s infinite ease-in-out;
+}
+
+/* Lớp đổ bóng bên dưới tạo hiệu ứng 3D nhẹ */
+.heart-path.shadow {
+    stroke: rgba(255, 45, 85, 0.3);
+    stroke-width: 1.5;
+    filter: blur(4px);
+}
+
+@keyframes pulseStroke {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 0.8;
+        stroke-width: 0.7;
+    }
+    50% { 
+        transform: scale(1.1); 
+        opacity: 1;
+        stroke-width: 1; /* Khi đập thì viền hơi dày lên tí */
+    }
+}
+
+/* Hiệu ứng nhấn giữ mạnh mẽ hơn */
+.heart-btn:active {
+    transform: scale(0.85);
+    transition: transform 0.1s;
+}
+
+    .heart-btn svg {
+        width: 100%;
+        height: 100%;
+        fill: #ff2d55;
+        filter: drop-shadow(0 0 10px #ff2d55) 
+                drop-shadow(0 0 25px rgba(255, 45, 85, 0.6));
+        animation: heartbeat 1.5s infinite ease-in-out;
+    }
+
+    .instruction {
+        color: white; margin-top: 30px; font-size: 1.1rem; opacity: 0.8;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* CENTER TITLE SAU KHI VÀO */
+    .center-title {
+        position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+        z-index:2; text-align:center; pointer-events:none; display: none;
+    }
+    .center-title h1 {
+        color:white; font-size:4.5rem; font-family:'Dancing Script', cursive;
+        text-shadow: 0 0 15px #ff4d88, 0 0 40px #ff4d88;
+    }
+
+    /* FALLING ITEMS */
+    .falling-item { position:absolute; top:-300px; pointer-events:none; animation-name:fall; animation-timing-function:linear; animation-fill-mode:forwards; }
+    .text-item {
+        padding:10px 20px; border-radius:20px; color:white; font-weight:600;
+        background:rgba(255,255,255,0.1); backdrop-filter:blur(5px);
+        border:1px solid rgba(255,255,255,0.2); white-space:nowrap;
+        text-shadow:0 0 8px #ff4d88; box-shadow: 0 0 15px rgba(255,105,180,0.3);
+    }
+    .image-item { width:150px; border-radius:15px; border:2px solid rgba(255,255,255,0.3); box-shadow: 0 0 20px rgba(255,105,180,0.3); }
+
+    @keyframes fall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        10% { opacity: 1; }
+        100% { transform: translateY(120vh) rotate(15deg); opacity: 0; }
+    }
+
+    .heart-float { position:absolute; color:#ff4d88; pointer-events:none; animation: heartFloat linear forwards; }
+    @keyframes heartFloat { from { transform:translateY(0); opacity:1; } to { transform:translateY(-100vh); opacity:0; } }
+
+    /* Hiệu ứng khi đang nhấn giữ (Long Press) */
+    .heart-btn:active {
+        transform: scale(0.9);
+    }
+    .center-title {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    pointer-events: none;
+    display: none;
+    width: 100%; /* Đảm bảo chữ nằm chính giữa */
+}
+
+.aesthetic-title {
+    font-family: 'Dancing Script', cursive; /* Dùng font viết tay bạn đã load */
+    font-size: 5rem; /* Tăng size lên một chút cho sang */
+    color: #fff5f7; /* Màu trắng hơi hồng nhẹ cực kỳ nịnh mắt */
+    font-weight: 700;
+    opacity: 0.25; /* Mờ nhẹ để không lấn át ảnh rơi */
+    letter-spacing: 2px; /* Khoảng cách chữ thưa ra cho thanh thoát */
+    
+    /* Hiệu ứng đổ bóng mờ ảo (Glow) */
+    text-shadow: 2px 2px 10px rgba(255, 182, 193, 0.5), 
+                 0 0 20px rgba(255, 45, 85, 0.2);
+    
+    /* Hiệu ứng mờ ảo nhẹ như sương */
+    filter: blur(0.5px);
+    
+    /* Nhịp thở nhẹ cho dòng chữ */
+    animation: titleFloat 4s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%, 100% { transform: translateY(0); opacity: 0.2; }
+    50% { transform: translateY(-10px); opacity: 0.35; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow one"></div>
+<div class="bg-glow two"></div>
+
+<div id="overlay">
+    <div class="heart-btn" id="heartBtn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="heart-path shadow" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        <path class="heart-path main" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+</div>
+    <p class="instruction">Ấn giữ </p>
+</div>
+
+<div class="center-title" id="mainTitle">
+    <h2 style="opacity: 0.3; color: antiquewhite;">Just for Manhhh... ✨</h2>
+</div>
+
+
+<audio id="myAudio" loop><source src="Iu Là Đây.mp3" type="audio/mpeg"></audio>
+
+<script>
+    // 1. Tạo sao nền
+    for(let i=0; i<100; i++){
+        const star = document.createElement("div");
+        star.classList.add("star");
+        star.style.left = Math.random()*100 + "vw";
+        star.style.top = Math.random()*100 + "vh";
+        star.style.animationDuration = (Math.random()*3 + 2) + "s";
+        document.body.appendChild(star);
+    }
+
+    const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg"];
+    const messages = [
+        "Cảm ơn vì đã xuất hiện ✨",
+        "Ngày hôm nay của cậu thế nào?",
+        "Cứ thong thả, mình đợi được mà 🌸",
+        "Có một sự dễ thương nhẹ ở đây...",
+        "Nhìn cậu cười, mình cũng vui lây",
+        "Hôm nay cậu xinh lắm nha!",
+        "Mong rằng cậu sẽ luôn vui vẻ",
+        "Tự nhiên thấy nhớ cái tên này quá...",
+        "Cậu là điều bất ngờ nhất mình có được",
+        "Hôm nay trời đẹp, hay là mình đi chơi?",
+        "Mỗi ngày đều muốn nhắn tin cho cậu",
+        "Cậu có thấy thế giới này đáng yêu không?",
+        "Cảm ơn vì những câu chuyện nhỏ",
+        "Chỉ định gửi một chút niềm vui thôi!",
+        "Cố lên nhé, mình luôn ủng hộ cậu 💪",
+        "Cậu là lý do để mình xem điện thoại",
+        "Sáng thức dậy, người đầu tiên mình nghĩ đến là cậu",
+        "Ngủ ngon và có những giấc mơ đẹp nhé!",
+        "Cậu đặc biệt hơn cậu tưởng đấy",
+        "Mong là chúng mình sẽ có thêm nhiều kỷ niệm"
+    ];
+
+    const heartBtn = document.getElementById("heartBtn");
+    const overlay = document.getElementById("overlay");
+    const audio = document.getElementById("myAudio");
+    const mainTitle = document.getElementById("mainTitle");
+
+    let pressTimer;
+    const longPressDuration = 1500; 
+
+    function startLoveApp() {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+            overlay.style.display = "none";
+            mainTitle.style.display = "block";
+        }, 1000);
+
+        audio.play();
+        setInterval(createFallingItem, 1000); 
+        setInterval(createFloatingHeart, 300);
+    }
+
+    function handlePressStart() {
+        pressTimer = setTimeout(startLoveApp, longPressDuration);
+        heartBtn.style.transform = "scale(1.5)";
+        heartBtn.style.transition = "1.5s";
+    }
+
+    function handlePressEnd() {
+        clearTimeout(pressTimer);
+        if (overlay.style.display !== "none") {
+            heartBtn.style.transform = "scale(1)";
+            heartBtn.style.transition = "0.3s";
+        }
+    }
+
+    heartBtn.addEventListener("mousedown", handlePressStart);
+    heartBtn.addEventListener("mouseup", handlePressEnd);
+    heartBtn.addEventListener("mouseleave", handlePressEnd);
+    heartBtn.addEventListener("touchstart", (e) => { e.preventDefault(); handlePressStart(); });
+    heartBtn.addEventListener("touchend", handlePressEnd);
+
+    const usedPositions = [];
+    function createFallingItem() {
+        const isText = Math.random() > 0.4;
+        const el = document.createElement(isText ? "div" : "img");
+        el.classList.add("falling-item");
+
+        if(isText) {
+            el.classList.add("text-item");
+            el.innerText = messages[Math.floor(Math.random()*messages.length)];
+        } else {
+            el.classList.add("image-item");
+            el.src = images[Math.floor(Math.random()*images.length)];
+        }
+
+        let left;
+        let attempts = 0;
+        do {
+            left = Math.random() * 80 + 5;
+            attempts++;
+        } while (usedPositions.some(pos => Math.abs(pos - left) < 15) && attempts < 20);
+
+        usedPositions.push(left);
+        if(usedPositions.length > 5) usedPositions.shift();
+
+        el.style.left = left + "vw";
+        const duration = Math.random() * 4 + 8; 
+        el.style.animationDuration = duration + "s";
+        
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), duration * 1000);
+    }
+
+    function createFloatingHeart() {
+        const h = document.createElement("div");
+        h.classList.add("heart-float");
+        h.innerHTML = "❤️";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.bottom = "-50px";
+        h.style.fontSize = Math.random() * 20 + 10 + "px";
+        const d = Math.random() * 3 + 5;
+        h.style.animationDuration = d + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), d * 1000);
+    }
+</script>
+</body>
+</html>
